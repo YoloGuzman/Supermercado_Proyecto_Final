@@ -1,0 +1,68 @@
+create table usuario(
+nit int(8) not null primary key,
+nombreUsuario varchar(30) not null,
+direccion varchar(30)
+);
+
+create table factura(
+noFactura int(8) not null primary key,
+fecha date not null,
+nit int(8),
+total double not null,
+foreign key (nit) references usuario(nit)
+);
+
+create table producto(
+idProducto int(8) not null primary key,
+nombreProducto varchar(30) not  null,
+precioVenta double not null,
+precioCosto double not null,
+codigoCategoria int(8) not null,
+fotoProducto blob not null,
+foreign key (codigoCategoria) references categoria(codigoCategoria)
+);
+
+create table  categoria(
+codigoCategoria int(8) not null primary key,
+nombreCategoria varchar(30) not null,
+descripcion varchar(30)
+);
+
+create table detalle(
+noDetalle int(8) not null primary key,
+cantidad int(5) not null,
+subtotal double not null,
+idProducto int(8) not null,
+noFactura int(8) not null,
+foreign key (idProducto) references producto(idProducto),
+foreign key (noFactura) references factura(noFactura)
+);
+
+create table medida(
+descripcion varchar(30) not null primary key
+);
+
+create table producto_medida(
+idProducto int(8) not null,
+descripcion varchar(30) not null,
+constraint primary key (idProducto, descripcion),
+existencia int(8) not null,
+foreign key (idProducto) references producto(idProducto),
+foreign key (descripcion) references medida(descripcion)
+);
+
+create table distribuidor(
+idDistribuidor int(8) not null primary key,
+nombreDistribuidor varchar(30) not null,
+telefonoDistribuidor long not null,
+direccionDistribuidor varchar	(50) not null,
+emailDistribuidor varchar(30)
+);
+
+create table producto_distribuidor(
+idProducto int(8) not null,
+idDistribuidor int(8)not null,
+constraint primary key (idProducto, idDistribuidor),
+foreign key (idProducto) references producto(idProducto),
+foreign key (idDistribuidor) references distribuidor(idDistribuidor)
+);

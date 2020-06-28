@@ -1,0 +1,51 @@
+public void insertDetalle(Detalle det, int existente){
+        
+        try {
+            stmt = connection.createStatement();
+
+                stmtInsertar = connection.prepareStatement("insert into detalle (cantidad, subtotal, idProducto, noFactura)" + 
+                        "values (?,?,?,?,?)");
+                
+                
+                ((PreparedStatement) stmtInsertar).setInt(1, det.getCantidad());
+                ((PreparedStatement) stmtInsertar).setDouble(2, det.getSubtotal());
+                ((PreparedStatement) stmtInsertar).setInt(5, det.getIdProducto());
+                ((PreparedStatement) stmtInsertar).setInt(6, det.getNoFactura());
+                
+                ((PreparedStatement) stmtInsertar).executeUpdate();
+                            
+                
+             
+            // update producto set nombreProducto = "Mango" where idProducto = 9401;
+            int nuevaCantidad = existente - det.getCantidad();
+            String sql = "update producto set existencia=? where idProducto=?";
+            PreparedStatement statment =  connection.prepareStatement(sql);
+            statment.setInt(1, nuevaCantidad);
+            statment.setInt(2, det.getIdProducto());
+                 
+            statment.executeUpdate();
+                
+        } catch (SQLException ex){
+            System.out.println("SQL_Exception: " + ex.getMessage());
+            System.out.println("SQL_State: " + ex.getSQLState());
+            System.out.println("VendprError: " + ex.getErrorCode());
+        }
+
+        finally {
+            if (resultSet != null){
+                try {
+                    resultSet.close();
+                } catch (SQLException sqlEx) {}
+                resultSet = null;
+            }
+        }
+
+        if (stmt == null) {
+            try {
+                stmt.close();
+            } catch (SQLException sqlEX) {
+            }
+            stmt = null;
+        }
+    }
+
